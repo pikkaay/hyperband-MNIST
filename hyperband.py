@@ -5,13 +5,11 @@ from time import time, ctime, sleep
 
 class Hyperband:
   
-  def __init__(self, get_params_function, args):
+  def __init__(self, try_params_function, args):
     # , get_params_function, try_params_function 
-    self.get_params = get_params_function
-    print(type(args))
-    print(args.log_file_name)
-
-    # self.try_params = try_params_function
+    # self.get_params = get_params_function
+    self.try_params = try_params_function
+    self.args = args
     
     self.max_iter = 81  	# maximum iterations per configuration
     self.eta = 3			# defines configuration downsampling rate (default = 3)
@@ -25,8 +23,8 @@ class Hyperband:
     self.counter = 0
     self.best_loss = np.inf
     self.best_counter = -1
-  def run_test():
-    result = self.try_params( n_iterations=1, t={'bs':32} , args)
+  def run_test(self):
+    result = self.try_params( n_iterations=1, t={'bs':32} , args=self.args)
     print(result)
   # can be called multiple times
   def run( self, skip_last = 0, dry_run = False ):
@@ -76,7 +74,7 @@ class Hyperband:
             result = { 'loss': random(), 'log_loss': random(), 'auc': random()}
           else:
             print('end')
-            result = self.try_params( n_iterations, t , args)		# <---
+            # result = self.try_params( n_iterations, t , args)		# <---
               
         #   assert( type( result ) == dict )
         #   assert( 'loss' in result )

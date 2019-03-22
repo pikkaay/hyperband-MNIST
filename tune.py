@@ -1,6 +1,9 @@
 from hyperband import Hyperband
-# from try_config import try_config
+from try_config import try_config
 import argparse
+
+from hyperopt import hp
+from hyperopt.pyll.stochastic import sample
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--model', default='path/to/model', 
@@ -38,5 +41,8 @@ args = parser.parse_args()
 
 print(type(args))
 
-hb = Hyperband(get_params, args)
-hb.run_test
+
+
+
+hb = Hyperband(try_config, args)
+hb.run_test()
