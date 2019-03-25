@@ -3,10 +3,10 @@ from tefla.core.lr_policy import StepDecayPolicy
 
 cnf = {
     'multilabel': True,
-    'classification':True,
+    # 'classification':True,
     # 'validation_scores': [('validation accuracy', util.accuracy_wrapper), ('validation kappa', util.kappa_wrapper)],
     'validation_scores': [('accuracy', tf.contrib.metrics.f1_score)],
-    'num_epochs': 200,
+    'num_epochs': 20,
     'lr_policy': StepDecayPolicy(
         schedule={
             0: 0.01,
@@ -28,7 +28,7 @@ cnf = {
         'shear_range': (0, 0),
         'translation_range': (0, 0),
         'do_flip': False,
-        'allow_stretch': True,
+        'allow_stretch': False,
     },
     'input_size': (28,28,3),
 

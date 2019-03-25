@@ -39,10 +39,8 @@ parser.add_argument('--is_summary', default=False,
 
 args = parser.parse_args()
 
-print(type(args))
-
-
-
-
+print('getting args')
+print('calling hyperband')
 hb = Hyperband(try_config, args)
-hb.run_test()
+hb.run()
+

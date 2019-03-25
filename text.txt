@@ -1,0 +1,22 @@
+# try train.py with full data 
+
+
+
+
+python tune.py \
+--model model.py \
+--training_cnf training_cnf.py \
+--tuning_cnf tuning_cnf.py \
+
+
+
+
+
+python tune.py \
+--model model.py \
+--training_cnf training_cnf.py \
+--tuning_cnf tuning_cnf.py \
+--data_dir ./Data/ \
+--loss_type cross_entropy \
+--num_classes 10 \
+--weights_dir ./saved_model \

@@ -1,16 +1,16 @@
 import numpy as np
 
 np.random.seed(127)
-import tensorflow as tf
+# import tensorflow as tf
 
-tf.set_random_seed(127)
+# tf.set_random_seed(127)
 
-from tefla.core.dir_dataset import DataSet
-from tefla.core.iter_ops import create_training_iters
-# from tefla.core.learning_hb import SupervisedLearner
-from tefla.da.standardizer import NoOpStandardizer
-from tefla.utils import util
-from hyperband import Hyperband
+# from tefla.core.dir_dataset import DataSet
+# from tefla.core.iter_ops import create_training_iters
+# # from tefla.core.learning_hb import SupervisedLearner
+# from tefla.da.standardizer import NoOpStandardizer
+# from tefla.utils import util
+# from hyperband import Hyperband
 
 
 # pylint: disable=no-value-for-parameter
@@ -19,19 +19,20 @@ from hyperband import Hyperband
 
 
 
-def try_config(n_iterations, t, args, tuning_cnf):
+def try_config(args, training_cnf):
 
   # model, training_cnf, tuning_cnf, data_dir, parallel, start_epoch, weights_from, weights_dir, resume_lr,
          # gpu_memory_fraction, num_classes, is_summary, loss_type, weighted, log_file_name
   print('reached try config')
-  print(args.model)
-  model_def = util.load_module(args.model)
-  model = model_def.model
-  cnf = util.load_module(args.training_cnf).training_cnf
-# call tuning cnf and call hyperband
-  tuning_cnf = util.load_module(args.tuning_cnf).tuning_cnf
+  print(training_cnf)
+  
+#   model_def = util.load_module(args.model)
+#   model = model_def.model
+#   cnf = util.load_module(args.training_cnf).training_cnf
+# # call tuning cnf and call hyperband
+#   tuning_cnf = util.load_module(args.tuning_cnf).tuning_cnf
 
-  cnf.update(tuning_cnf)
+#   cnf.update(tuning_cnf)
 
 
   # if weights_from:

@@ -2,12 +2,15 @@ import numpy as np
 from random import random
 from math import log, ceil
 from time import time, ctime, sleep
+from hyperopt.pyll.stochastic import sample
 
-class Hyperband:
-  
+from defs import defs
+
+class Hyperband(defs):
   def __init__(self, try_params_function, args):
     # , get_params_function, try_params_function 
     # self.get_params = get_params_function
+    super().__init__(args.tuning_cnf)
     self.try_params = try_params_function
     self.args = args
     
@@ -23,15 +26,18 @@ class Hyperband:
     self.counter = 0
     self.best_loss = np.inf
     self.best_counter = -1
-  def run_test(self):
-    result = self.try_params( n_iterations=1, t={'bs':32} , args=self.args)
-    print(result)
+
+    self.training_cnf = self.load_module(self.args.training_cnf).cnf
+    self.tuning_cnf = self.load_module(self.args.tuning_cnf).cnf
+
+  # def get_params(self):
+  #   params = sample(  self.tuning_cnf)
+  #   return handle_integers( params )
+
   # can be called multiple times
   def run( self, skip_last = 0, dry_run = False ):
-    print('s - loop')
     for s in reversed( range( self.s_max + 1 )):
-      print(s)
-    for s in reversed( range( self.s_max + 1 )):
+      print('s in smax', s)
       sleep(1)
       
       # initial number of configurations
@@ -41,11 +47,10 @@ class Hyperband:
       r = self.max_iter * self.eta ** ( -s )		
   
       # n random configurations
-      T = [ i for i in range( n )] 
-      print(' i - loop')
-      for i in range(( s + 1 ) - int( skip_last )):
-        print(i)
+      T = [ self.get_params() for i in range(n)] 
+
       for i in range(( s + 1 ) - int( skip_last )):	# changed from s + 1
+        print('i in s', i)
         sleep(1)
           
         # Run each of the n configs for <iterations> 
@@ -56,40 +61,42 @@ class Hyperband:
         
         print("\n*** {} configurations x {:.1f} iterations each".format( 
             n_configs, n_iterations ))
-        
+        sleep(1)
+
         val_losses = []
         # early_stops = []
+
         for t in T:
-          print(t)
-        for t in T:
+          self.training_cnf.update(t)
+          print('updated', self.training_cnf)
           sleep(1)
-          
+          self.training_cnf['num_epochs'] = n_iterations
           self.counter += 1
           print ("\n{} | {} | lowest loss so far: {:.4f} (run {})\n".format( 
               self.counter, ctime(), self.best_loss, self.best_counter ))
-          
+          sleep(1)
+
           start_time = time()
-          
           if dry_run:
             result = { 'loss': random(), 'log_loss': random(), 'auc': random()}
           else:
             print('end')
-            # result = self.try_params( n_iterations, t , args)		# <---
+            result = self.try_params( self.args, self.training_cnf)		# <---
               
-        #   assert( type( result ) == dict )
-        #   assert( 'loss' in result )
+          assert( type( result ) == dict )
+          assert( 'loss' in result )
           
-        #   seconds = int( round( time() - start_time ))
-        #   print ("\n{} seconds.".format( seconds ))
+          seconds = int( round( time() - start_time ))
+          print ("\n{} seconds.".format( seconds ))
           
-        #   loss = result['loss']	
-        #   val_losses.append( loss )
+          loss = result['loss']	
+          val_losses.append( loss )
           
-        #   early_stop = result.get( 'early_stop', False )
-        #   early_stops.append( early_stop )
+          # early_stop = result.get( 'early_stop', False )
+          # early_stops.append( early_stop )
           
-        #   # keeping track of the best result so far (for display only)
-        #   # could do it be checking results each time, but hey
+          # keeping track of the best result so far (for display only)
+          # could do it be checking results each time, but hey
         #   if loss < self.best_loss:
         #     self.best_loss = loss
         #     self.best_counter = self.counter
@@ -107,5 +114,5 @@ class Hyperband:
         # T = [ T[i] for i in indices if not early_stops[i]]
         # T = T[ 0:int( n_configs / self.eta )]
     
-    # return self.results
+    return #self.results
     

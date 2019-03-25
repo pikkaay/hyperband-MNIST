@@ -1,9 +1,0 @@
-# try train.py with full data 
-python train.py \
---model conv_model.py \
---training_cnf multilabel_cnf.py \
---data_dir ./Data/ \
---loss_type binary_focal_loss \
---num_classes 14 \
---gpu_memory_fraction 0.05 \
---weights_dir ./saved_model \
